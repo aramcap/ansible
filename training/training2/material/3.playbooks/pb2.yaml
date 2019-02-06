@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Remove dir
+      file:
+        path: /home/fannn/dir1
+        state: absent
+
+    - name: Remove user
+      user:
+        name: fannn
+        state: absent
+        remove: yes

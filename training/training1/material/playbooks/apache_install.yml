@@ -1,0 +1,10 @@
+---
+- hosts: webservers
+  become: true
+  tasks:
+  - name: Instalar Apache
+    yum: pkg=httpd state=latest
+  - name: Escribir el archivo de configuracion
+    copy: src=httpd.conf dest=/etc/httpd.conf
+  - name: Ejecutar Apache y habilitarlo al iniciar el sistema
+    service: name=httpd state=started enabled=yes

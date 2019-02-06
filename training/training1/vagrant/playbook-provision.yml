@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Set passwd vagrant
+    user:
+      name: vagrant
+      password: "{{ 'vagrant' | password_hash('sha512', 'mysecretsalt') }}"
+  - name: Config authorized key
+    authorized_key:
+      user: vagrant
+      key: "{{ lookup('file', 'ssh-keys/id_rsa.pub') }}"

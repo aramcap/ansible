@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Run httpd container
+    docker_container:
+      name: httpd
+      image: httpd:alpine
+      ports:
+        - 80:80

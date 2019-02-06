@@ -1,0 +1,37 @@
+---
+
+- hosts: vm01
+  become: yes
+  vars:
+    - java_oracle_dir: /root/java/
+  tasks:
+    - name: Create dir
+      file:
+        path: "{{ java_oracle_dir }}"
+        state: directory
+
+    - name: Download Java RPM
+      get_url:
+        headers: 
+          Cookie: 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+        dest: "{{ java_oracle_dir }}"
+        url: https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm
+        force: no
+      register: java_oracle_download
+
+    - name: Install Java RPM
+      package:
+        name: "{{ java_oracle_download.dest }}"
+        state: present
+
+    - name: Adding the path in the profile.d files
+      lineinfile:
+        dest: /etc/profile.d/javaenv.sh
+        line: 'export JAVA_HOME="/usr/java/latest"'
+        state: present
+        create: yes
+
+    - name: Clean tmp_dir
+      file:
+        path: "{{ java_oracle_dir }}"
+        state: absent

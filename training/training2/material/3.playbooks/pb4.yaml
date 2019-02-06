@@ -1,0 +1,33 @@
+---
+
+- hosts: vm02
+  become: yes
+  tasks:
+  - name: Install reqs Docker
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - epel-release
+      - python-pip
+
+  - name: Install docker-py
+    pip:
+      name: docker-py
+      state: present
+
+  - name: Install repo Docker
+    command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+  - name: Install Docker
+    package:
+      name: docker-ce
+      state: present
+
+  - name: Start service
+    service:
+      name: docker
+      state: started

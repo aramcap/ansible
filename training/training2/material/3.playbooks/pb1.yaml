@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create user
+      user:
+        name: fannn
+        password: "{{ 'fannn' | password_hash('sha512', 'mysecretsalt') }}"
+        
+    - name: Create dir
+      file:
+        path: /home/fannn/dir1
+        state: directory
+        owner: fannn
+        group: fannn
+
+    - name: Copy file
+      copy:
+        src: 2.ad-hoc/ejemplo
+        dest: /home/fannn/dir1
+        owner: fannn
+        group: fannn
+        mode: 0770
